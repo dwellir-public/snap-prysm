@@ -1,0 +1,68 @@
+name: prysm
+adopt-info: prysm
+license: GPL-3.0
+summary: prysm - ethereum consensus client
+description: |
+  Prysm is an Ethereum Consensus Implementation Written in Go
+
+  Usage: prysm <beacon-chain|validator|client-stats>
+
+grade: stable
+confinement: strict
+base: core22
+
+architectures:
+  - amd64
+
+apps:
+  prysm:
+    command: bin/prysm.sh
+    environment:
+      BEACON_CHAIN_REAL: $SNAP/bin/beacon-chain
+      VALIDATOR_REAL: $SNAP/bin/validator
+      CLIENT_STATS_REAL: $SNAP/bin/client-stats
+    plugs:
+      - network
+      - network-bind
+
+parts:
+  prysm:
+    plugin: nil
+    build-packages:
+      - cmake
+      - libssl-dev
+      - libgmp-dev
+      - libtinfo5
+      - protobuf-compiler
+    source: https://github.com/prysmaticlabs/prysm.git
+    source-tag: v5.0.4
+    source-depth: 1
+
+    # Follows this installation path: https://docs.prylabs.network/docs/install/install-with-bazel
+
+    override-pull: |
+      craftctl default
+      apt install apt-transport-https curl gnupg -y
+      curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor >bazel-archive-keyring.gpg
+      mv bazel-archive-keyring.gpg /usr/share/keyrings
+      echo "deb [arch=amd64 signed-by=/usr/share/keyrings/bazel-archive-keyring.gpg] https://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list
+      apt update
+      apt install bazel=7.1.0 -y
+      craftctl set version="$(git describe --tags --abbrev=7)-$(git rev-parse --short HEAD)"
+
+    override-build: |
+      bazel build //cmd/beacon-chain:beacon-chain --config=release
+      bazel build //cmd/validator:validator --config=release
+      bazel build //cmd/client-stats:client-stats --config=release
+      mkdir -p $SNAPCRAFT_PART_INSTALL/bin/
+      cp bazel-bin/cmd/validator/validator_/validator $SNAPCRAFT_PART_INSTALL/bin/
+      cp bazel-bin/cmd/beacon-chain/beacon-chain_/beacon-chain $SNAPCRAFT_PART_INSTALL/bin/
+      cp bazel-bin/cmd/client-stats/client-stats_/client-stats $SNAPCRAFT_PART_INSTALL/bin/
+
+
+# Ship a script that is similar to the prysm.sh which most people might be familiar with
+  prysm-sh:
+    plugin: dump
+    source: .
+    organize:
+      prysm.sh: bin/prysm.sh
