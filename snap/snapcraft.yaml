@@ -6,7 +6,10 @@ description: |
   Prysm is an Ethereum Consensus Implementation Written in Go
 
   Usage: prysm <beacon-chain|validator|client-stats>
-
+contact: info@dwellir.com
+issues: https://github.com/dwellir-public/snap-prysm/issues
+source-code: https://github.com/dwellir-public/snap-prysm/
+website: https://www.dwellir.com
 grade: stable
 confinement: strict
 base: core22
