@@ -19,7 +19,7 @@ export recipient_addr="My reciepient address for validator rewards"
 
 prysm beacon-chain \
    --execution-endpoint=http://localhost:8551 \
-   --jwt-secret=/home/erik/jwt.hex \
+   --jwt-secret=/var/snap/prysm/common/jwt.hex \
    --suggested-fee-recipient=${recipient_addr} \
    --checkpoint-sync-url=https://beaconstate.ethstaker.cc \
    --genesis-beacon-api-url=https://beaconstate.ethstaker.cc
