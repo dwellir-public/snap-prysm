@@ -38,7 +38,7 @@ parts:
       - libtinfo5
       - protobuf-compiler
     source: https://github.com/prysmaticlabs/prysm.git
-    source-tag: v5.2.0
+    source-tag: v5.3.0
     source-depth: 1
 
     # Follows this installation path: https://docs.prylabs.network/docs/install/install-with-bazel
@@ -50,7 +50,7 @@ parts:
       mv bazel-archive-keyring.gpg /usr/share/keyrings
       echo "deb [arch=amd64 signed-by=/usr/share/keyrings/bazel-archive-keyring.gpg] https://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list
       apt update
-      apt install bazel=7.1.0 -y
+      apt install bazel=7.4.1 -y
       craftctl set version="$(git describe --tags --abbrev=7)-$(git rev-parse --short HEAD)"
 
     override-build: |
