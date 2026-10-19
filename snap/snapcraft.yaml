@@ -38,7 +38,7 @@ parts:
       - libtinfo5
       - protobuf-compiler
     source: https://github.com/OffchainLabs/prysm.git
-    source-tag: v7.2.1
+    source-tag: v7.3.0
     source-depth: 1
 
     # Follows this installation path: https://docs.prylabs.network/docs/install/install-with-bazel
